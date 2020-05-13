@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>表信息</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <div id="wrap">
+    <h1>数据展示</h1>
+    <select name="" id="sel">
+      <option value=""></option>
+    </select>
+
+    <button id="btn01">查询</button><br>
+    <table class="list">
+      <tr>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    let path = [
+      "http://127.0.0.1:3000/test/user",
+      "http://127.0.0.1:3000/test/movie",
+    ]
+
+    let opHtml = "";
+    $(path).each((index,elem)=>{
+      opHtml += `<option value="${elem}">${elem}</option>`
+    })
+    $("#sel").html(opHtml)
+
+    $("#btn01").on("click",()=>{
+      let options=$("#sel option:selected").val()
+      console.log(options);
+      
+      showTable(options)
+    })
+
+
+
+
+    function showTable(path) {
+      $.ajax(path, {
+        success: res => {
+          let oRes = JSON.parse(res);
+          let html = '';
+
+          console.log(oRes);
+          
+
+          oRes.forEach(element => {
+            html += "<tr>"
+            for (key in element) {
+              if(typeof element[key] == "object"){
+                html += `<td>${key}</td>`
+              }else{
+                html += `<td>${element[key]}</td>`
+              }
+            }
+            html += "</tr>"
+          });
+
+          $('.list').html(html);
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>
